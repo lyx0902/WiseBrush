@@ -45,8 +45,11 @@ class InputDialogHomeFragment : DialogFragment() {
         textPrompt1=viewPrompt.findViewById(R.id.editText1)//正提示词
         textPrompt2=viewPrompt.findViewById(R.id.editText2)//反提示词
 
+
+
         // Initialize SharedPreferences
         sharedPreferences = requireContext().getSharedPreferences("InputDialogPrefs", Context.MODE_PRIVATE)
+
 
         // Load previously saved text or set default value
         val savedText1 = sharedPreferences.getString("savedText1", "Please input")
@@ -64,7 +67,9 @@ class InputDialogHomeFragment : DialogFragment() {
             val textToSave1 = editText1.text.toString()
             val textToSave2 = editText2.text.toString()
             val textToSave3 = editText3.text.toString()
-            saveText(textToSave1, textToSave2, textToSave3)
+            saveText(textToSave1, textToSave2, textToSave3, textPrompt1.toString(),
+                textPrompt2.toString()
+            )
             dismiss() // Close the dialog
         }
 
@@ -76,11 +81,13 @@ class InputDialogHomeFragment : DialogFragment() {
         return view
     }
 
-    private fun saveText(text1: String, text2: String, text3: String) {
+    private fun saveText(text1: String, text2: String, text3: String, text4: String, text5: String) {
         with(sharedPreferences.edit()) {
             putString("savedText1", text1)
             putString("savedText2", text2)
             putString("savedText3", text3)
+            putString("positivePrompt", text4)
+            putString("negativePrompt", text5)
             apply()
         }
     }
