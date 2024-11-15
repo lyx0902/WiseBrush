@@ -130,6 +130,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/button" />
 
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/imageFrame"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:background="#EEEEEE"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="1.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/button"-->
+<!--        app:layout_constraintVertical_bias="1.0" />-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -144,6 +158,40 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Brush" />
+        <LinearLayout
+            android:id="@+id/colorPalette"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/brushButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <Button
+                android:id="@+id/colorButton1"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:backgroundTint="#FF0000" />
+
+            <Button
+                android:id="@+id/colorButton2"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:backgroundTint="#00FF00" />
+
+            <Button
+                android:id="@+id/colorButton3"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:backgroundTint="#0000FF" />
+
+            <Button
+                android:id="@+id/colorButton4"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:backgroundTint="#FFFF00" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/eraserButton"
@@ -159,5 +207,7 @@
             android:layout_weight="1"
             android:text="Clear" />
     </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

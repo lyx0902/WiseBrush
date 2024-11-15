@@ -45,13 +45,17 @@ class DrawingView(context: Context, attrs: AttributeSet?) : View(context, attrs)
         val touchX = event.x
         val touchY = event.y
         when (event.action) {
-            MotionEvent.ACTION_DOWN -> drawPath.moveTo(touchX, touchY)
-            MotionEvent.ACTION_MOVE -> drawPath.lineTo(touchX, touchY)
+            MotionEvent.ACTION_DOWN -> {
+                drawPath.moveTo(touchX, touchY)
+            }
+            MotionEvent.ACTION_MOVE -> {
+                drawPath.lineTo(touchX, touchY)
+                invalidate()
+            }
             MotionEvent.ACTION_UP -> {
                 drawCanvas?.drawPath(drawPath, drawPaint)
                 drawPath.reset()
             }
-            else -> return false
         }
         invalidate()
         return true
@@ -69,6 +73,11 @@ class DrawingView(context: Context, attrs: AttributeSet?) : View(context, attrs)
         } else {
             drawPaint.xfermode = null
         }
+    }
+
+    fun setColor(newColor: Int) {
+        invalidate()
+        drawPaint.color = newColor
     }
 
     fun startNew() {
