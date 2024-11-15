@@ -96,7 +96,7 @@ class HomeFragment : Fragment() {
             try {
                 val inputStream = requireContext().contentResolver.openInputStream(imageUri)
                 val originalBitmap = BitmapFactory.decodeStream(inputStream)
-                val maxDimension = 1024
+                val maxDimension = 512
                 val aspectRatio = originalBitmap.width.toFloat() / originalBitmap.height.toFloat()
                 val scaledWidth: Int
                 val scaledHeight: Int
