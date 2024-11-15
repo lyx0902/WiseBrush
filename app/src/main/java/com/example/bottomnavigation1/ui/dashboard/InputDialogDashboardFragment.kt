@@ -12,7 +12,7 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.example.bottomnavigation1.R
 
-class InputDialogFragment : DialogFragment() {
+class InputDialogDashboardFragment : DialogFragment() {
 
     private lateinit var textView1: TextView
     private lateinit var textView2: TextView

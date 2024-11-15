@@ -28,7 +28,7 @@ class DashboardFragment : Fragment() {
     }
 
     private fun showInputDialog() {
-        val dialog = InputDialogFragment()
+        val dialog = InputDialogDashboardFragment()
         val args = Bundle()
         args.putString("savedText", savedText)
         dialog.arguments = args
