@@ -2,6 +2,7 @@ package com.example.bottomnavigation1.ui.home
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -90,9 +91,28 @@ class HomeFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val inputStream = requireContext().contentResolver.openInputStream(imageUri)
-                val bitmap = BitmapFactory.decodeStream(inputStream)
+                val originalBitmap = BitmapFactory.decodeStream(inputStream)
+                val maxDimension = 1024
+                val aspectRatio = originalBitmap.width.toFloat() / originalBitmap.height.toFloat()
+                val scaledWidth: Int
+                val scaledHeight: Int
+
+                if (originalBitmap.width > originalBitmap.height) {
+                    scaledWidth = maxDimension
+                    scaledHeight = (maxDimension / aspectRatio).toInt()
+                } else {
+                    scaledHeight = maxDimension
+                    scaledWidth = (maxDimension * aspectRatio).toInt()
+                }
+
+                val scaledBitmap = Bitmap.createScaledBitmap(
+                    originalBitmap,
+                    scaledWidth,
+                    scaledHeight,
+                    true
+                )
                 withContext(Dispatchers.Main) {
-                    binding.imageView.setImageBitmap(bitmap)
+                    binding.imageView.setImageBitmap(scaledBitmap)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
