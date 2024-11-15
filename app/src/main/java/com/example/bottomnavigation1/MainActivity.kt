@@ -32,11 +32,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.navigation_notifications) {
-                binding.drawingViewContainer.visibility = View.VISIBLE
-            } else {
-                binding.drawingViewContainer.visibility = View.GONE
-            }
+            binding.drawingViewContainer.visibility = View.GONE
         }
     }
 }
