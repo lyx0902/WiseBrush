@@ -32,7 +32,7 @@ class InputDialogDashboardFragment : DialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_input_dialog, container, false)
 
-        val viewPrompt=inflater.inflate(R.layout.fragment_home, container, false)
+        val viewPrompt=inflater.inflate(R.layout.fragment_dashboard, container, false)
         textView1 = view.findViewById(R.id.textView1)
         textView2 = view.findViewById(R.id.textView2)
         textView3 = view.findViewById(R.id.textView3)
