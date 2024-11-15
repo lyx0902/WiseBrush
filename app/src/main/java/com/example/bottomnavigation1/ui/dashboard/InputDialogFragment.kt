@@ -14,7 +14,9 @@ import com.example.bottomnavigation1.R
 
 class InputDialogFragment : DialogFragment() {
 
-    private lateinit var textView: TextView
+    private lateinit var textView1: TextView
+    private lateinit var textView2: TextView
+    private lateinit var textView3: TextView
     private lateinit var editText1: EditText
     private lateinit var editText2: EditText
     private lateinit var editText3: EditText
@@ -28,7 +30,9 @@ class InputDialogFragment : DialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_input_dialog, container, false)
 
-        textView = view.findViewById(R.id.textView)
+        textView1 = view.findViewById(R.id.textView1)
+        textView2 = view.findViewById(R.id.textView2)
+        textView3 = view.findViewById(R.id.textView3)
         editText1 = view.findViewById(R.id.editText1)
         editText2 = view.findViewById(R.id.editText2)
         editText3 = view.findViewById(R.id.editText3)
@@ -42,7 +46,9 @@ class InputDialogFragment : DialogFragment() {
         val savedText1 = sharedPreferences.getString("savedText1", "")
         val savedText2 = sharedPreferences.getString("savedText2", "")
         val savedText3 = sharedPreferences.getString("savedText3", "")
-        textView.text = "Non-editable text"
+        textView1.text = "参数1"
+        textView2.text = "参数2"
+        textView3.text = "参数3"
         editText1.setText(savedText1)
         editText2.setText(savedText2)
         editText3.setText(savedText3)
