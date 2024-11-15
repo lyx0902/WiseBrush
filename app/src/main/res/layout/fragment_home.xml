@@ -118,4 +118,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/inputContainer" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Image from local"
+        app:layout_constraintTop_toBottomOf="@id/button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
