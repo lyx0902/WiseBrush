@@ -42,7 +42,7 @@ class InputDialogHomeFragment : DialogFragment() {
         saveButton = view.findViewById(R.id.saveButton)
         cancelButton = view.findViewById(R.id.cancelButton)
 
-        textPrompt1=viewPrompt.findViewById(R.id.editText1)//正提示词
+        textPrompt1=viewPrompt.findViewById<EditText?>(R.id.editText1)//正提示词
         textPrompt2=viewPrompt.findViewById(R.id.editText2)//反提示词
 
 

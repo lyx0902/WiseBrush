@@ -55,10 +55,11 @@ class HomeFragment : Fragment() {
         binding.button.setOnClickListener {
             val imageRepository = ImageRepository()
             var sharedPreferences = requireContext().getSharedPreferences("InputDialogPrefs", Context.MODE_PRIVATE)
+
             var generateRequest = GenerateRequest(
-                sharedPreferences.getString("positivePrompt", "").toString(), //这里不能为空
-                sharedPreferences.getString("negativePrompt", "").toString(),
-//                sharedPreferences.getString("savedText1", "7.5").toString().toDouble(), #这里是默认值
+                requireView().findViewById<EditText>(R.id.editText1).text.toString(),
+                requireView().findViewById<EditText>(R.id.editText2).text.toString(),
+//                sharedPreferences.getString("savedText1", "7.5").toString().toDouble(),
 //                sharedPreferences.getString("savedText2", "50").toString().toInt(),
 //                sharedPreferences.getString("savedText3", "512").toString().toInt(),
             )
