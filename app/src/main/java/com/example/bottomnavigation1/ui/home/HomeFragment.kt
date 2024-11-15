@@ -1,6 +1,7 @@
 package com.example.bottomnavigation1.ui.home
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -51,8 +52,12 @@ class HomeFragment : Fragment() {
 
         binding.button.setOnClickListener {
             val imageRepository = ImageRepository()
-            if (savedText != null) {
-                imageRepository.generateImageAndSave(requireContext(), savedText!!){ result ->
+            var sharedPreferences =
+                requireContext().getSharedPreferences("InputDialogPrefs", Context.MODE_PRIVATE)
+            var savedText1 :String = sharedPreferences.getString("savedText1", "Please input").toString()
+
+
+                imageRepository.generateImageAndSave(requireContext(), savedText1 ){ result ->
                     result.onSuccess { file ->
                         // 文件保存成功，显示图像文件
                         var imageFilePath = file.absolutePath
@@ -65,7 +70,6 @@ class HomeFragment : Fragment() {
 
                 }
             }
-        }
 
         return root
     }
