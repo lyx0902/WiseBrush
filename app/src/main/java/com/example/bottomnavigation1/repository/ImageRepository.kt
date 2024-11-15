@@ -4,7 +4,6 @@ package com.example.bottomnavigation1.repository
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import com.example.bottomnavigation1.api.RetrofitInstance
@@ -23,8 +22,7 @@ import java.io.InputStream
 class ImageRepository {
 
     // 请求生成图像并保存
-    fun generateImageAndSave(context: Context, prompt: String, callback: (Result<File>) -> Unit) {
-        val request = GenerateRequest(prompt)
+    fun generateImageAndSave(context: Context, request: GenerateRequest, callback: (Result<File>) -> Unit) {
 
         RetrofitInstance.apiService.generateImage(request).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -34,7 +32,8 @@ class ImageRepository {
                         val inputStream = responseBody.byteStream()
                         try {
                             // 保存图像到图库指定文件夹
-                            val fileUri = saveImageToGallery(context, inputStream, prompt)
+                            // to do此处应该改为用户（如有
+                            val fileUri = saveImageToGallery(context, inputStream, request.positivePrompt)
                             if (fileUri != null) {
                                 callback(Result.success(File(fileUri.path))) // 返回文件 URI
                             } else {

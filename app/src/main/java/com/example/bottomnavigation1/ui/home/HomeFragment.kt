@@ -14,9 +14,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.example.bottomnavigation1.R
 import com.example.bottomnavigation1.databinding.FragmentHomeBinding
+import com.example.bottomnavigation1.model.GenerateRequest
 import com.example.bottomnavigation1.repository.ImageRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,17 +54,21 @@ class HomeFragment : Fragment() {
 
         binding.button.setOnClickListener {
             val imageRepository = ImageRepository()
-            var sharedPreferences =
-                requireContext().getSharedPreferences("InputDialogPrefs", Context.MODE_PRIVATE)
-            var savedText1 :String = sharedPreferences.getString("savedText1", "Please input").toString()
+            var sharedPreferences = requireContext().getSharedPreferences("InputDialogPrefs", Context.MODE_PRIVATE)
+            var generateRequest = GenerateRequest(
+                sharedPreferences.getString("positivePrompt", "").toString(), //这里不能为空
+                sharedPreferences.getString("negativePrompt", "").toString(),
+//                sharedPreferences.getString("savedText1", "7.5").toString().toDouble(), #这里是默认值
+//                sharedPreferences.getString("savedText2", "50").toString().toInt(),
+//                sharedPreferences.getString("savedText3", "512").toString().toInt(),
+            )
 
-
-                imageRepository.generateImageAndSave(requireContext(), savedText1 ){ result ->
+            imageRepository.generateImageAndSave(requireContext(), generateRequest ){ result ->
                     result.onSuccess { file ->
                         // 文件保存成功，显示图像文件
                         var imageFilePath = file.absolutePath
-                        val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-                        openGallery()
+                        loadImageFromUri(imageFilePath.toUri())
+//                        openGallery()
                     }
                     result.onFailure { exception ->
                         Log.e("Error", "API request failed", exception)
