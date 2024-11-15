@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.example.bottomnavigation1.R
 import com.example.bottomnavigation1.databinding.FragmentHomeBinding
@@ -61,8 +62,8 @@ class HomeFragment : Fragment() {
                     result.onSuccess { file ->
                         // 文件保存成功，显示图像文件
                         var imageFilePath = file.absolutePath
-                        val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-                        openGallery()
+                        loadImageFromUri(imageFilePath.toUri())
+//                        openGallery()
                     }
                     result.onFailure { exception ->
                         Log.e("Error", "API request failed", exception)
