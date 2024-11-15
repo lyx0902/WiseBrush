@@ -20,6 +20,8 @@ class InputDialogDashboardFragment : DialogFragment() {
     private lateinit var editText1: EditText
     private lateinit var editText2: EditText
     private lateinit var editText3: EditText
+    private lateinit var textPrompt1: EditText
+    private lateinit var textPrompt2: EditText
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
     private lateinit var sharedPreferences: SharedPreferences
@@ -30,6 +32,7 @@ class InputDialogDashboardFragment : DialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_input_dialog, container, false)
 
+        val viewPrompt=inflater.inflate(R.layout.fragment_home, container, false)
         textView1 = view.findViewById(R.id.textView1)
         textView2 = view.findViewById(R.id.textView2)
         textView3 = view.findViewById(R.id.textView3)
@@ -39,6 +42,8 @@ class InputDialogDashboardFragment : DialogFragment() {
         saveButton = view.findViewById(R.id.saveButton)
         cancelButton = view.findViewById(R.id.cancelButton)
 
+        textPrompt1=viewPrompt.findViewById(R.id.editText1)//正提示词
+        textPrompt2=viewPrompt.findViewById(R.id.editText2)//反提示词
         // Initialize SharedPreferences
         sharedPreferences = requireContext().getSharedPreferences("InputDialogPrefs", Context.MODE_PRIVATE)
 
