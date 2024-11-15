@@ -184,7 +184,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Eraser" />
+            android:text="Erase" />
 
         <Button
             android:id="@+id/clearButton"
@@ -192,8 +192,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Clear" />
+
+        <Button
+            android:id="@+id/uploadButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Upload"
+            android:layout_weight="1" />
     </LinearLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

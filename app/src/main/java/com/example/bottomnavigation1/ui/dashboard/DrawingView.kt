@@ -84,4 +84,10 @@ class DrawingView(context: Context, attrs: AttributeSet?) : View(context, attrs)
         drawCanvas?.drawColor(0, PorterDuff.Mode.CLEAR)
         invalidate()
     }
+
+    fun setImageBitmap(bitmap: Bitmap) {
+        canvasBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        drawCanvas = Canvas(canvasBitmap!!)
+        invalidate()
+    }
 }
