@@ -9,7 +9,7 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="参数1" />
+        android:text="相关性" />
 
     <EditText
         android:id="@+id/editText1"
@@ -21,7 +21,7 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="参数2" />
+        android:text="步数" />
 
     <EditText
         android:id="@+id/editText2"
@@ -33,7 +33,7 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="参数3" />
+        android:text="可选种子(默认为null)" />
 
     <EditText
         android:id="@+id/editText3"
