@@ -6,12 +6,16 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.example.bottomnavigation1.R
 import com.example.bottomnavigation1.databinding.FragmentHomeBinding
+import com.example.bottomnavigation1.repository.ImageRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,7 +49,21 @@ class HomeFragment : Fragment() {
         }
 
         binding.button.setOnClickListener {
-            openGallery()
+            val imageRepository = ImageRepository()
+            if (savedText != null) {
+                imageRepository.generateImageAndSave(requireContext(), savedText!!){ result ->
+                    result.onSuccess { file ->
+                        // 文件保存成功，显示图像文件
+                        var imageFilePath = file.absolutePath
+                        val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                        openGallery()
+                    }
+                    result.onFailure { exception ->
+                        Log.e("Error", "API request failed", exception)
+                    }
+
+                }
+            }
         }
 
         return root
