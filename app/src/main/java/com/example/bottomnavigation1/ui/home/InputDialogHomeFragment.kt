@@ -55,9 +55,9 @@ class InputDialogHomeFragment : DialogFragment() {
         val savedText1 = sharedPreferences.getString("savedText1", "Please input")
         val savedText2 = sharedPreferences.getString("savedText2", "Please input")
         val savedText3 = sharedPreferences.getString("savedText3", "Please input")
-        textView1.text = "参数1"
-        textView2.text = "参数2"
-        textView3.text = "参数3"
+        textView1.text = "相关性"
+        textView2.text = "步数"
+        textView3.text = "可选的种子(默认为null)"
         editText1.setText(savedText1)
         editText2.setText(savedText2)
         editText3.setText(savedText3)

@@ -42,18 +42,22 @@ class InputDialogDashboardFragment : DialogFragment() {
         saveButton = view.findViewById(R.id.saveButton)
         cancelButton = view.findViewById(R.id.cancelButton)
 
-        textPrompt1=viewPrompt.findViewById(R.id.editText1)//正提示词
+        textPrompt1=viewPrompt.findViewById<EditText?>(R.id.editText1)//正提示词
         textPrompt2=viewPrompt.findViewById(R.id.editText2)//反提示词
+
+
+
         // Initialize SharedPreferences
         sharedPreferences = requireContext().getSharedPreferences("InputDialogPrefs", Context.MODE_PRIVATE)
 
-        // Load previously saved text
-        val savedText1 = sharedPreferences.getString("savedText1", "")
-        val savedText2 = sharedPreferences.getString("savedText2", "")
-        val savedText3 = sharedPreferences.getString("savedText3", "")
-        textView1.text = "参数1"
-        textView2.text = "参数2"
-        textView3.text = "参数3"
+
+        // Load previously saved text or set default value
+        val savedText1 = sharedPreferences.getString("savedText1", "Please input")
+        val savedText2 = sharedPreferences.getString("savedText2", "Please input")
+        val savedText3 = sharedPreferences.getString("savedText3", "Please input")
+        textView1.text = "相关性"
+        textView2.text = "步数"
+        textView3.text = "可选的种子(默认为null)"
         editText1.setText(savedText1)
         editText2.setText(savedText2)
         editText3.setText(savedText3)
@@ -63,7 +67,9 @@ class InputDialogDashboardFragment : DialogFragment() {
             val textToSave1 = editText1.text.toString()
             val textToSave2 = editText2.text.toString()
             val textToSave3 = editText3.text.toString()
-            saveText(textToSave1, textToSave2, textToSave3)
+            saveText(textToSave1, textToSave2, textToSave3, textPrompt1.toString(),
+                textPrompt2.toString()
+            )
             dismiss() // Close the dialog
         }
 
@@ -75,11 +81,13 @@ class InputDialogDashboardFragment : DialogFragment() {
         return view
     }
 
-    private fun saveText(text1: String, text2: String, text3: String) {
+    private fun saveText(text1: String, text2: String, text3: String, text4: String, text5: String) {
         with(sharedPreferences.edit()) {
             putString("savedText1", text1)
             putString("savedText2", text2)
             putString("savedText3", text3)
+            putString("positivePrompt", text4)
+            putString("negativePrompt", text5)
             apply()
         }
     }
