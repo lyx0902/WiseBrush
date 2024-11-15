@@ -25,6 +25,7 @@ class DashboardFragment : Fragment() {
         binding.drawingFrame.addView(drawingView)
 
         binding.brushButton.setOnClickListener {
+            drawingView.setErase(false)
             binding.colorPalette.visibility = View.VISIBLE
         }
 
