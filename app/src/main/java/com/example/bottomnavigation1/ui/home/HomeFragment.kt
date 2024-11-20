@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
         binding.button.setOnClickListener {
             val imageRepository = ImageRepository
             var sharedPreferences = requireContext().getSharedPreferences("InputDialogPrefs", Context.MODE_PRIVATE)
-
+            //1
             var generateRequest = GenerateRequest(
                 requireView().findViewById<EditText>(R.id.editText1).text.toString(),
                 requireView().findViewById<EditText>(R.id.editText2).text.toString(),
