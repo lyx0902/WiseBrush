@@ -140,7 +140,7 @@ class DashboardFragment : Fragment() {
             binding.colorPalette.visibility = View.GONE
         }
         binding.button.setOnClickListener{
-            val imageRepository = ImageRepository()
+            val imageRepository = ImageRepository
             var sharedPreferences = requireContext().getSharedPreferences("InputDialogPrefs", Context.MODE_PRIVATE)
 
             var generateRequest = GenerateRequest(
