@@ -1,6 +1,10 @@
 package com.example.bottomnavigation1.repository
 
+import com.example.bottomnavigation1.api.RetrofitInstance
 import com.example.bottomnavigation1.database.Database
+import com.example.bottomnavigation1.model.LoginRequest
+import com.example.bottomnavigation1.model.RegisterRequest
+import com.example.bottomnavigation1.model.UpdateProfileRequest
 import com.example.bottomnavigation1.model.User
 import com.example.bottomnavigation1.utils.encryptPsw.encryptPassword
 
@@ -8,136 +12,94 @@ import java.sql.SQLException
 
 object UserRepository {
 
-    // 插入用户
-    fun addUser(user: User): Boolean {
-        val connection = Database.getConnection()
-        val sql = "INSERT INTO users (name, password, email) VALUES (?, ?, ?)"
-        return try {
-            val statement = connection!!.prepareStatement(sql)
-            statement.setString(1, user.name)    // 设置 name 参数
-            statement.setString(2, encryptPassword(user.password))// 设置 password 参数
-            statement.setString(3, user.email)   // 设置 email 参数
-            statement.executeUpdate() > 0         // 执行插入操作，成功返回大于0的行数
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            false
-        } finally {
-            connection?.close()
-        }
-    }
 
-    // 根据ID查询用户
-    fun getUserById(id: Int): User? {
-        val connection = Database.getConnection()
-        val sql = "SELECT * FROM users WHERE id = ?"
+
+    suspend fun registerUser(name: String, password: String, email: String): Result<String> {
+        val registerRequest = RegisterRequest(name, password, email)
         return try {
-            val statement = connection!!.prepareStatement(sql)
-            statement.setInt(1, id)
-            val resultSet = statement.executeQuery()
-            if (resultSet.next()) {
-                User(
-                    id = resultSet.getInt("id"),
-                    name = resultSet.getString("name"),
-                    password = resultSet.getString("password"),
-                    email = resultSet.getString("email")
-                )
+            val response = RetrofitInstance.apiService.registerUser(registerRequest)
+            if (response.isSuccessful) {
+                Result.success("注册成功")
             } else {
-                null
+                Result.failure(Exception("注册失败: ${response.body()?.get("message") ?: "未知错误"}"))
             }
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            null
-        } finally {
-            connection?.close()
+        } catch (e: Exception) {
+            Result.failure(Exception("注册失败: ${e.message}"))
         }
     }
 
-    //用户名信息
-    fun getUserByName(name: String): User? {
-        val connection = Database.getConnection()
-        val sql = "SELECT * FROM users WHERE name = ?"
+    // 用户登录
+    suspend fun loginUser(name: String, password: String): Result<String> {
+        val loginRequest = LoginRequest(name, password)
         return try {
-            val statement = connection!!.prepareStatement(sql)
-            statement.setString(1, name)
-            val resultSet = statement.executeQuery()
-            if (resultSet.next()) {
-                User(
-                    id = resultSet.getInt("id"),
-                    name = resultSet.getString("name"),
-                    password = resultSet.getString("password"),
-                    email = resultSet.getString("email")
-                )
+            val response = RetrofitInstance.apiService.loginUser(loginRequest)
+            if (response.isSuccessful) {
+                val message = response.body()?.get("message") ?: "登录成功"
+                Result.success(message)
             } else {
-                null
+                Result.failure(Exception("登录失败: ${response.body()?.get("message") ?: "未知错误"}"))
             }
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            null
-        } finally {
-            connection?.close()
+        } catch (e: Exception) {
+            Result.failure(Exception("登录失败: ${e.message}"))
         }
     }
 
-
-    //邮箱
-    fun getUserByEmail(email: String): User? {
-        val connection = Database.getConnection();
-        val sql = "SELECT * FROM users WHERE email = ?";
+    // 根据用户名查询用户
+    suspend fun getUserByName(name: String): Result<Map<String, Any>> {
         return try {
-            val statement = connection!!.prepareStatement(sql);
-            statement.setString(1, email);
-            val resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                User(
-                    id = resultSet.getInt("id"),
-                    name = resultSet.getString("name"),
-                    password = resultSet.getString("password"),
-                    email = resultSet.getString("email")
-                )
+            val response = RetrofitInstance.apiService.getUserByName(name)
+            if (response.isSuccessful) {
+                Result.success(response.body() ?: emptyMap())
             } else {
-                null
+                Result.failure(Exception("查询失败: ${response.body()?.get("message") ?: "未知错误"}"))
             }
-        } catch (e: SQLException) {
-            e.printStackTrace();
-            null
-        } finally {
-            connection?.close();
+        } catch (e: Exception) {
+            Result.failure(Exception("查询失败: ${e.message}"))
         }
-
     }
 
-    // 更新用户信息
-    fun updateUser(user: User): Boolean {
-        val connection = Database.getConnection()
-        val sql = "UPDATE users SET name = ?, password = ?, email = ? WHERE id = ?"
+    // 根据邮箱查询用户
+    suspend fun getUserByEmail(email: String): Result<Map<String, Any>> {
         return try {
-            val statement = connection!!.prepareStatement(sql)
-            statement.setString(1, user.name)    // 设置 name 参数
-            statement.setString(2, encryptPassword(user.password))// 设置 password 参数
-            statement.setString(3, user.email)   // 设置 email 参数
-            statement.setInt(4, user.id!!)        // 设置 id 参数（用于定位需要更新的记录）
-            statement.executeUpdate() > 0         // 执行更新操作，返回影响的行数
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            false
-        } finally {
-            connection?.close()
+            val response = RetrofitInstance.apiService.getUserByEmail(email)
+            if (response.isSuccessful) {
+                Result.success(response.body() ?: emptyMap())
+            } else {
+                Result.failure(Exception("查询失败: ${response.body()?.get("message") ?: "未知错误"}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("查询失败: ${e.message}"))
         }
     }
 
-    // 删除用户
-    fun deleteUser(id: Int): Boolean {
-        val connection = Database.getConnection()
-        val sql = "DELETE FROM users WHERE id = ?"
+    // 修改密码
+    suspend fun updatePassword(name: String, oldPassword: String, newPassword: String): Result<String> {
+        val updatePasswordRequest = mapOf("name" to name, "old_password" to oldPassword, "new_password" to newPassword)
         return try {
-            val statement = connection!!.prepareStatement(sql)
-            statement.setInt(1, id)   // 设置 id 参数
-            statement.executeUpdate() > 0   // 执行删除操作，返回影响的行数
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            false
-        } finally {
-            connection?.close()
+            val response = RetrofitInstance.apiService.updatePassword(updatePasswordRequest)
+            if (response.isSuccessful) {
+                Result.success("密码修改成功")
+            } else {
+                Result.failure(Exception("密码修改失败: ${response.body()?.get("message") ?: "未知错误"}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("密码修改失败: ${e.message}"))
         }
     }
+
+    // 修改个人信息
+    suspend fun updateProfile(name: String, newName: String, newEmail: String): Result<String> {
+        val updateProfileRequest = UpdateProfileRequest(name, newName, newEmail)
+        return try {
+            val response = RetrofitInstance.apiService.updateProfile(updateProfileRequest)
+            if (response.isSuccessful) {
+                Result.success("个人信息修改成功")
+            } else {
+                Result.failure(Exception("个人信息修改失败: ${response.body()?.get("message") ?: "未知错误"}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("个人信息修改失败: ${e.message}"))
+        }
+    }
+
 }

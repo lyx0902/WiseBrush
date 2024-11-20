@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.button.setOnClickListener {
-            val imageRepository = ImageRepository()
+            val imageRepository = ImageRepository
             var sharedPreferences = requireContext().getSharedPreferences("InputDialogPrefs", Context.MODE_PRIVATE)
 
             var generateRequest = GenerateRequest(

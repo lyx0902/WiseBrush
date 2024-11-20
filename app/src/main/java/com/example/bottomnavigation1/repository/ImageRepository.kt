@@ -19,7 +19,7 @@ import java.io.IOException
 import java.io.InputStream
 
 // to do
-class ImageRepository {
+object ImageRepository {
 
     // 请求生成图像并保存
     fun generateImageAndSave(context: Context, request: GenerateRequest, callback: (Result<File>) -> Unit) {
