@@ -11,6 +11,8 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.example.bottomnavigation1.R
+import com.example.bottomnavigation1.model.User
+import com.example.bottomnavigation1.repository.UserRepository
 
 class InputDialogHomeFragment : DialogFragment() {
 
@@ -83,6 +85,8 @@ class InputDialogHomeFragment : DialogFragment() {
 
     private fun saveText(text1: String, text2: String, text3: String, text4: String, text5: String) {
         with(sharedPreferences.edit()) {
+            UserRepository.addUser(User(id  = null, name = "John Doe", password = "123456", email = "123"));
+
             putString("savedText1", text1)
             putString("savedText2", text2)
             putString("savedText3", text3)

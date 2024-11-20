@@ -10,6 +10,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.bottomnavigation1.databinding.ActivityMainBinding
+import com.example.bottomnavigation1.model.User
+import com.example.bottomnavigation1.repository.UserRepository
+
 //import com.example.bottomnavigation1.Database.User
 //import com.example.bottomnavigation1.Database.UserViewModel
 
@@ -23,7 +26,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)

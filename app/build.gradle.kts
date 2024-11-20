@@ -50,16 +50,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.google.code.gson:gson:2.10.1")
 
-    implementation("org.jetbrains.exposed:exposed-core:0.41.1")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.41.1")
-    implementation("mysql:mysql-connector-java:8.0.30")
+    implementation ("mysql:mysql-connector-java:8.0.30")
 
-
-
-    implementation("androidx.room:room-runtime:2.5.0")
-    implementation(libs.identity.jvm)
-    kapt("androidx.room:room-compiler:2.5.0")
-    implementation("androidx.room:room-ktx:2.5.0")
+    implementation ("org.mindrot:jbcrypt:0.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
 
     implementation(libs.androidx.core.ktx)
