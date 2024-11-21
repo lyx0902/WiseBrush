@@ -1,13 +1,17 @@
 package com.example.bottomnavigation1.ui.notifications
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import android.widget.Toast
+import com.example.bottomnavigation1.R
 import com.example.bottomnavigation1.databinding.FragmentNotificationsBinding
 
 class NotificationsFragment : Fragment() {
@@ -36,16 +40,53 @@ class NotificationsFragment : Fragment() {
         binding.registerButton.setOnClickListener {
             val username = binding.username.text.toString()
             val password = binding.password.text.toString()
-            val email = binding.email.text.toString() // 获取 email 信息
+            val email = binding.email.text.toString()
             viewModel.register(username, password, email)
         }
+
         viewModel.loginResult.observe(viewLifecycleOwner, Observer { result ->
-            Toast.makeText(context, result, Toast.LENGTH_SHORT).show()
+            if (result != null) {//=="登录成功"
+                val username = binding.username.text.toString()
+                showNewUserInterface(username)
+            } else {
+                Toast.makeText(context, result, Toast.LENGTH_SHORT).show()
+            }
         })
 
         viewModel.registerResult.observe(viewLifecycleOwner, Observer { result ->
             Toast.makeText(context, result, Toast.LENGTH_SHORT).show()
         })
+    }
+
+    private fun toggleHistoryContent(view: View) {
+        val content = binding.root.findViewById<View>(R.id.historyContent)
+        content.visibility = if (content.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+    }
+
+    private fun toggleUpdateProfileContent(view: View) {
+        val content = binding.root.findViewById<View>(R.id.updateProfileContent)
+        content.visibility = if (content.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+    }
+
+    private fun toggleChangePasswordContent(view: View) {
+        val content = binding.root.findViewById<View>(R.id.changePasswordContent)
+        content.visibility = if (content.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+    }
+
+    private fun showNewUserInterface(username: String) {
+        binding.originalLayout.visibility = View.GONE
+        val newUserInterfaceStub = binding.root.findViewById<ViewStub>(R.id.newUserInterfaceStub)
+        if (newUserInterfaceStub != null) {
+            val inflatedView = newUserInterfaceStub.inflate()
+            val usernameTextView = inflatedView.findViewById<TextView>(R.id.usernameTextView)
+            usernameTextView.text = username
+            // 确保加载的视图及其子元素可见
+            inflatedView.visibility = View.VISIBLE
+            usernameTextView.visibility = View.VISIBLE
+            Log.d("NotificationsFragment", "New user interface inflated and username set")
+        } else {
+            Log.e("NotificationsFragment", "ViewStub is null")
+        }
     }
 
     override fun onDestroyView() {

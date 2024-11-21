@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:visibility="visible">
+<!--    android:visibility="visible"-->
+<!--    tools:context=".ui.notifications.NotificationsFragment">-->
+
+    <TextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textSize="20sp"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/historyHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="历史记录"
+        android:padding="16dp"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="toggleHistoryContent"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/historyContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <!-- 历史记录内容 -->
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/updateProfileHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="toggleUpdateProfileContent"
+        android:padding="16dp"
+        android:text="个人信息更新"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/updateProfileContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <!-- 个人信息更新内容 -->
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/changePasswordHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="toggleChangePasswordContent"
+        android:padding="16dp"
+        android:text="修改密码"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/changePasswordContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <!-- 修改密码内容 -->
+    </LinearLayout>
+</LinearLayout>
