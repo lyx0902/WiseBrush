@@ -1,13 +1,20 @@
 package com.example.bottomnavigation1.ui.notifications
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
 class NotificationsViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
+    fun login(username: String, password: String) {
+        viewModelScope.launch {
+            // Implement login logic here
+        }
     }
-    val text: LiveData<String> = _text
+
+    fun register(username: String, password: String) {
+        viewModelScope.launch {
+            // Implement registration logic here
+        }
+    }
 }
