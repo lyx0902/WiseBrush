@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import android.widget.Toast
 import com.example.bottomnavigation1.databinding.FragmentNotificationsBinding
 
 class NotificationsFragment : Fragment() {
@@ -34,8 +36,16 @@ class NotificationsFragment : Fragment() {
         binding.registerButton.setOnClickListener {
             val username = binding.username.text.toString()
             val password = binding.password.text.toString()
-            viewModel.register(username, password)
+            val email = binding.email.text.toString() // 获取 email 信息
+            viewModel.register(username, password, email)
         }
+        viewModel.loginResult.observe(viewLifecycleOwner, Observer { result ->
+            Toast.makeText(context, result, Toast.LENGTH_SHORT).show()
+        })
+
+        viewModel.registerResult.observe(viewLifecycleOwner, Observer { result ->
+            Toast.makeText(context, result, Toast.LENGTH_SHORT).show()
+        })
     }
 
     override fun onDestroyView() {

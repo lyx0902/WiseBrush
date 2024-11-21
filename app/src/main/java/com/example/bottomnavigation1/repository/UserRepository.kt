@@ -11,9 +11,6 @@ import com.example.bottomnavigation1.utils.encryptPsw.encryptPassword
 import java.sql.SQLException
 
 object UserRepository {
-
-
-
     suspend fun registerUser(name: String, password: String, email: String): Result<String> {
         val registerRequest = RegisterRequest(name, password, email)
         return try {
