@@ -21,9 +21,8 @@ import java.io.InputStream
 // to do
 object ImageRepository {
 
-    // 请求生成图像并保存
-    fun generateImageAndSave(context: Context, request: GenerateRequest, callback: (Result<File>) -> Unit) {
 
+    fun generateImageAndSave(context: Context, request: GenerateRequest, callback: (Result<File>) -> Unit) {
         RetrofitInstance.apiService.generateImage(request).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
