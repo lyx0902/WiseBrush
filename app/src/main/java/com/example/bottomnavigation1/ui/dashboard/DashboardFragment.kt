@@ -7,7 +7,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -20,7 +19,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -33,6 +31,7 @@ import com.example.bottomnavigation1.model.GenerateRequest
 import com.example.bottomnavigation1.repository.ImageRepository
 import com.example.bottomnavigation1.ui.home.InputDialogHomeFragment
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 
 class DashboardFragment : Fragment() {
@@ -122,12 +121,10 @@ class DashboardFragment : Fragment() {
             binding.colorPalette.visibility = View.GONE
         }
 
-
         root.setOnClickListener {
             binding.colorPalette.visibility = View.GONE
         }
         binding.button.setOnClickListener{
-
             val imageRepository = ImageRepository
             var sharedPreferences = requireContext().getSharedPreferences("InputDialogPrefs", Context.MODE_PRIVATE)
 
@@ -140,10 +137,9 @@ class DashboardFragment : Fragment() {
             imageRepository.imgToImg(requireContext(),  getBitmapFromDrawingView(), generateRequest){ result ->
                 result.onSuccess { file ->
                     // 文件保存成功，显示图像文件
-                    var imageFilePath = file.absolutePath
-                    val imageView: ImageView = requireView().findViewById(R.id.imageView)
-                    loadImageFromPath(imageView, imageFilePath)
-                        openGallery()
+                    var imageFilePath = file
+                    loadImageFromUri(imageFilePath.toUri())
+                    openGallery()
                 }
                 result.onFailure { exception ->
                     Log.e("Error", "API request failed", exception)
@@ -171,32 +167,6 @@ class DashboardFragment : Fragment() {
             val scaledBitmap = Bitmap.createScaledBitmap(it, viewWidth, viewHeight, true)
             drawingView.setImageBitmap(scaledBitmap)
         }
-    }
-
-    fun getWiseBrushImagePath(context: Context, fileName: String): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val selection = "${MediaStore.Images.Media.RELATIVE_PATH} LIKE ? AND ${MediaStore.Images.Media.DISPLAY_NAME} = ?"
-        val selectionArgs = arrayOf("%WiseBrush%", fileName)
-        val cursor: Cursor? = context.contentResolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            projection,
-            selection,
-            selectionArgs,
-            null
-        )
-
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                return it.getString(columnIndex)
-            }
-        }
-        return null
-    }
-
-    fun loadImageFromPath(imageView: ImageView, imagePath: String) {
-        val bitmap = BitmapFactory.decodeFile(imagePath)
-        imageView.setImageBitmap(bitmap)
     }
 
     private fun getBitmapFromDrawingView(): Bitmap {

@@ -14,9 +14,9 @@ object RetrofitInstance {
     private val client = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         //to do
-        .connectTimeout(60, TimeUnit.SECONDS)  // 设置连接超时
-        .readTimeout(60, TimeUnit.SECONDS)     // 设置读取超时
-        .writeTimeout(60, TimeUnit.SECONDS)    // 设置写入超时
+        .connectTimeout(600, TimeUnit.SECONDS)  // 设置连接超时
+        .readTimeout(600, TimeUnit.SECONDS)     // 设置读取超时
+        .writeTimeout(600, TimeUnit.SECONDS)    // 设置写入超时
         .build()
     private val retrofit by lazy {
         Retrofit.Builder()

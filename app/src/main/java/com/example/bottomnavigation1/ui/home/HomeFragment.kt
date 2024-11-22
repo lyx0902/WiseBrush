@@ -67,9 +67,9 @@ class HomeFragment : Fragment() {
             imageRepository.textToImg(requireContext(), generateRequest ){ result ->
                     result.onSuccess { file ->
                         // 文件保存成功，显示图像文件
-                        var imageFilePath = file.absolutePath
+                        var imageFilePath = file
                         loadImageFromUri(imageFilePath.toUri())
-//                        openGallery()
+                        openGallery()
                     }
                     result.onFailure { exception ->
                         Log.e("Error", "API request failed", exception)
