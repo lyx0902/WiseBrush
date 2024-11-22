@@ -14,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
@@ -53,16 +55,6 @@ class DashboardFragment : Fragment() {
             val imageUri: Uri? = data?.data
             if (imageUri != null) {
                 loadImageFromUri(imageUri)
-            }
-        }
-    }
-
-    private val pickImage111 = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            val imageUri: Uri? = data?.data
-            if (imageUri != null) {
-                loadImageFromUri111(imageUri)
             }
         }
     }
@@ -146,9 +138,7 @@ class DashboardFragment : Fragment() {
             var generateRequest = GenerateRequest(
                 requireView().findViewById<EditText>(R.id.editText1).text.toString(),
                 requireView().findViewById<EditText>(R.id.editText2).text.toString(),
-//                sharedPreferences.getString("savedText1", "7.5").toString().toDouble(),
-//                sharedPreferences.getString("savedText2", "50").toString().toInt(),
-//                sharedPreferences.getString("savedText3", "512").toString().toInt(),
+
             )
 
             imageRepository.generateImageAndSave(requireContext(), generateRequest ){ result ->
@@ -172,11 +162,6 @@ class DashboardFragment : Fragment() {
         pickImage.launch(intent)
     }
 
-    private fun openGallery111() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        pickImage111.launch(intent)
-    }
-
     private fun loadImageFromUri(imageUri: Uri) {
         val inputStream = requireContext().contentResolver.openInputStream(imageUri)
         val originalBitmap = BitmapFactory.decodeStream(inputStream)
@@ -191,37 +176,12 @@ class DashboardFragment : Fragment() {
         }
     }
 
-    private fun loadImageFromUri111(imageUri: Uri) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val inputStream = requireContext().contentResolver.openInputStream(imageUri)
-                val originalBitmap = BitmapFactory.decodeStream(inputStream)
-                val maxDimension = 512
-                val aspectRatio = originalBitmap.width.toFloat() / originalBitmap.height.toFloat()
-                val scaledWidth: Int
-                val scaledHeight: Int
-
-                if (originalBitmap.width > originalBitmap.height) {
-                    scaledWidth = maxDimension
-                    scaledHeight = (maxDimension / aspectRatio).toInt()
-                } else {
-                    scaledHeight = maxDimension
-                    scaledWidth = (maxDimension * aspectRatio).toInt()
-                }
-
-                val scaledBitmap = Bitmap.createScaledBitmap(
-                    originalBitmap,
-                    scaledWidth,
-                    scaledHeight,
-                    true
-                )
-                withContext(Dispatchers.Main) {
-                    binding.imageView.setImageBitmap(scaledBitmap)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+    private fun getBitmapFromDrawingView(): Bitmap {
+        drawingView.isDrawingCacheEnabled = true
+        drawingView.buildDrawingCache()
+        val bitmap = Bitmap.createBitmap(drawingView.drawingCache)
+        drawingView.isDrawingCacheEnabled = false
+        return bitmap
     }
 
     private fun showInputDialog() {
@@ -256,7 +216,6 @@ class DashboardFragment : Fragment() {
                 outputStream.flush()
                 outputStream.close()
 
-                // 如果是 Android 10 或以上，可以使用 MediaStore 保存到公共目录
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                     saveImageToMediaStore(bitmap, filename)
                 } else {
