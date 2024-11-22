@@ -143,16 +143,7 @@ class DashboardFragment : Fragment() {
                     var imageFilePath = file.absolutePath
                     val imageView: ImageView = requireView().findViewById(R.id.imageView)
                     loadImageFromPath(imageView, imageFilePath)
-
-//                    val fileName = "saved_image_1732267426715.png" // 替换为你的文件名
-//                    val imagePath = getWiseBrushImagePath(requireContext(), fileName)
-//                    if (imagePath != null) {
-//                        loadImageFromPath(imageView, imagePath)
-//                    } else {
-//                        Toast.makeText(requireContext(), "Image not found", Toast.LENGTH_SHORT).show()
-//                    }
-
-//                        openGallery()
+                        openGallery()
                 }
                 result.onFailure { exception ->
                     Log.e("Error", "API request failed", exception)
