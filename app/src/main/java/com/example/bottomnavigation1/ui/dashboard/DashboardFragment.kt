@@ -7,6 +7,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -19,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -138,8 +140,16 @@ class DashboardFragment : Fragment() {
                 result.onSuccess { file ->
                     // 文件保存成功，显示图像文件
                     var imageFilePath = file
-                    loadImageFromUri(imageFilePath.toUri())
-                    openGallery()
+                    var imageName = imageFilePath + ".png"
+                    val imageView: ImageView = requireView().findViewById(R.id.imageView)
+                    val imagePath = getWiseBrushImagePath(requireContext(), imageName)
+                    if (imagePath != null) {
+                        loadImageFromPath(imageView, imagePath)
+                    } else {
+                        Toast.makeText(requireContext(), "Image not found", Toast.LENGTH_SHORT).show()
+                    }
+//                    loadImageFromUri(imageFilePath.toUri())
+//                    openGallery()
                 }
                 result.onFailure { exception ->
                     Log.e("Error", "API request failed", exception)
@@ -148,6 +158,27 @@ class DashboardFragment : Fragment() {
             }
         }
         return root
+    }
+
+    fun getWiseBrushImagePath(context: Context, fileName: String): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val selection = "${MediaStore.Images.Media.RELATIVE_PATH} LIKE ? AND ${MediaStore.Images.Media.DISPLAY_NAME} = ?"
+        val selectionArgs = arrayOf("%Pictures%", fileName)
+        val cursor: Cursor? = context.contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )
+
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                return it.getString(columnIndex)
+            }
+        }
+        return null
     }
 
     private fun openGallery() {
@@ -167,6 +198,11 @@ class DashboardFragment : Fragment() {
             val scaledBitmap = Bitmap.createScaledBitmap(it, viewWidth, viewHeight, true)
             drawingView.setImageBitmap(scaledBitmap)
         }
+    }
+
+    fun loadImageFromPath(imageView: ImageView, imagePath: String) {
+        val bitmap = BitmapFactory.decodeFile(imagePath)
+        imageView.setImageBitmap(bitmap)
     }
 
     private fun getBitmapFromDrawingView(): Bitmap {
