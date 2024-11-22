@@ -203,30 +203,24 @@ class DashboardFragment : Fragment() {
     }
 
     private fun saveImageViewContent() {
-        val imageView = binding.imageView
-        val drawable = imageView.drawable
-        if (drawable is BitmapDrawable) {
-            val bitmap = drawable.bitmap
+        val bitmap = getBitmapFromDrawingView()
 
-            val filename = "saved_image_${System.currentTimeMillis()}.png"
-            val file = File(requireContext().getExternalFilesDir(null), filename)
-            try {
-                val outputStream = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                outputStream.flush()
-                outputStream.close()
+        val filename = "saved_image_${System.currentTimeMillis()}.png"
+        val file = File(requireContext().getExternalFilesDir(null), filename)
+        try {
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.flush()
+            outputStream.close()
 
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                    saveImageToMediaStore(bitmap, filename)
-                } else {
-                    Toast.makeText(requireContext(), "Image saved: ${file.absolutePath}", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(requireContext(), "Failed to save image", Toast.LENGTH_SHORT).show()
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                saveImageToMediaStore(bitmap, filename)
+            } else {
+                Toast.makeText(requireContext(), "Image saved: ${file.absolutePath}", Toast.LENGTH_SHORT).show()
             }
-        } else {
-            Toast.makeText(requireContext(), "Drawable is not a BitmapDrawable", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(requireContext(), "Failed to save image", Toast.LENGTH_SHORT).show()
         }
     }
 
