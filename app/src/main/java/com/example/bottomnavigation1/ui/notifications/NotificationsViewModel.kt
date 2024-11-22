@@ -63,7 +63,7 @@ class NotificationsViewModel : ViewModel() {
             }
         }
     }
-
+//
     fun updateUserProfile(username: String, newUsername: String, newPassword: String, newEmail: String) {
         viewModelScope.launch {
             UserRepository.updateProfile(username, newUsername,newPassword, newEmail)
