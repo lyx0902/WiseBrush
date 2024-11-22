@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
 //                sharedPreferences.getString("savedText3", "512").toString().toInt(),
             )
 
-            imageRepository.generateImageAndSave(requireContext(), generateRequest ){ result ->
+            imageRepository.textToImg(requireContext(), generateRequest ){ result ->
                     result.onSuccess { file ->
                         // 文件保存成功，显示图像文件
                         var imageFilePath = file.absolutePath

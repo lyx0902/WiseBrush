@@ -14,16 +14,13 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -33,11 +30,6 @@ import com.example.bottomnavigation1.databinding.FragmentDashboardBinding
 import com.example.bottomnavigation1.model.GenerateRequest
 import com.example.bottomnavigation1.repository.ImageRepository
 import com.example.bottomnavigation1.ui.home.InputDialogHomeFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
@@ -141,7 +133,7 @@ class DashboardFragment : Fragment() {
 
             )
 
-            imageRepository.generateImageAndSave(requireContext(), generateRequest ){ result ->
+            imageRepository.imgToImg(requireContext(),  getBitmapFromDrawingView(), generateRequest){ result ->
                 result.onSuccess { file ->
                     // 文件保存成功，显示图像文件
                     var imageFilePath = file.absolutePath
