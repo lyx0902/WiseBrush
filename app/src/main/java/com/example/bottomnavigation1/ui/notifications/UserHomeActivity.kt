@@ -4,47 +4,48 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.bottomnavigation1.R
 
 class UserHomeActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: NotificationsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_home)
 
+        viewModel = ViewModelProvider(this).get(NotificationsViewModel::class.java)
+
         val username = intent.getStringExtra("username")
         Log.d("UserHomeActivity", "Username: $username")
 
         val usernameTextView = findViewById<TextView>(R.id.usernameTextView)
+        val updateUsernameEditText = findViewById<EditText>(R.id.updateUsernameEditText)
+        val updatePasswordEditText = findViewById<EditText>(R.id.updatePasswordEditText)
+        val updateEmailEditText = findViewById<EditText>(R.id.updateEmailEditText)
+        val updateButton = findViewById<Button>(R.id.updateButton)
+        val logoutButton = findViewById<Button>(R.id.logoutButton)
+
         if (username != null) {
             usernameTextView.text = username
+            viewModel.getUserProfile(username)
+            viewModel.userProfile.observe(this, { profile ->
+                updateUsernameEditText.setText(profile.name)
+                updatePasswordEditText.setText(profile.password)
+                updateEmailEditText.setText(profile.email)
+            })
         } else {
             usernameTextView.text = "Unknown User"
         }
 
-        val updateOptionsSpinner = findViewById<Spinner>(R.id.updateOptionsSpinner)
-        val updateValueEditText = findViewById<EditText>(R.id.updateValueEditText)
-        val updateButton = findViewById<Button>(R.id.updateButton)
-        val logoutButton = findViewById<Button>(R.id.logoutButton)
-
         updateButton.setOnClickListener {
-            val selectedOption = updateOptionsSpinner.selectedItem.toString()
-            val newValue = updateValueEditText.text.toString()
+            val newUsername = updateUsernameEditText.text.toString()
+            val newPassword = updatePasswordEditText.text.toString()
+            val newEmail = updateEmailEditText.text.toString()
 
-            when (selectedOption) {
-                "Update Username" -> {
-                    // Handle username update
-                    Toast.makeText(this, "Username updated to $newValue", Toast.LENGTH_SHORT).show()
-                }
-                "Update Password" -> {
-                    // Handle password update
-                    Toast.makeText(this, "Password updated", Toast.LENGTH_SHORT).show()
-                }
-                "Update Email" -> {
-                    // Handle email update
-                    Toast.makeText(this, "Email updated to $newValue", Toast.LENGTH_SHORT).show()
-                }
-            }
+            viewModel.updateUserProfile(username!!, newUsername, newPassword, newEmail)
+            Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show()
         }
 
         logoutButton.setOnClickListener {

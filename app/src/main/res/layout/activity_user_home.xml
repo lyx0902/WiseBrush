@@ -13,39 +13,43 @@
         android:textSize="20sp"
         android:visibility="visible" />
 
-    <Spinner
-        android:id="@+id/updateOptionsSpinner"
+    <EditText
+        android:id="@+id/updateUsernameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/update_options"/>
+        android:hint="Enter new username" />
 
     <EditText
-        android:id="@+id/updateValueEditText"
+        android:id="@+id/updatePasswordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter new value" />
+        android:hint="Enter new password" />
+
+    <EditText
+        android:id="@+id/updateEmailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter new email" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/updateButton"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Update" />
 
         <Button
             android:id="@+id/logoutButton"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Logout"
             android:visibility="visible" />
-
     </LinearLayout>
-
 </LinearLayout>
