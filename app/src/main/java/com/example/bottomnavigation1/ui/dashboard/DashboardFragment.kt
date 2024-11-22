@@ -146,7 +146,7 @@ class DashboardFragment : Fragment() {
                     if (imagePath != null) {
                         loadImageFromPath(imageView, imagePath)
                     } else {
-                        Toast.makeText(requireContext(), "Image not found", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Image Error", Toast.LENGTH_SHORT).show()
                     }
 //                    loadImageFromUri(imageFilePath.toUri())
 //                    openGallery()
@@ -160,7 +160,7 @@ class DashboardFragment : Fragment() {
         return root
     }
 
-    fun getWiseBrushImagePath(context: Context, fileName: String): String? {
+    private fun getWiseBrushImagePath(context: Context, fileName: String): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)
         val selection = "${MediaStore.Images.Media.RELATIVE_PATH} LIKE ? AND ${MediaStore.Images.Media.DISPLAY_NAME} = ?"
         val selectionArgs = arrayOf("%Pictures%", fileName)

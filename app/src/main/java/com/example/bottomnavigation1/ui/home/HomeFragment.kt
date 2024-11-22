@@ -3,6 +3,7 @@ package com.example.bottomnavigation1.ui.home
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -13,6 +14,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -68,8 +71,14 @@ class HomeFragment : Fragment() {
                     result.onSuccess { file ->
                         // 文件保存成功，显示图像文件
                         var imageFilePath = file
-                        loadImageFromUri(imageFilePath.toUri())
-                        openGallery()
+                        var imageName = imageFilePath + ".png"
+                        val imageView: ImageView = requireView().findViewById(R.id.imageView1)
+                        val imagePath = getWiseBrushImagePath(requireContext(), imageName)
+                        if (imagePath != null) {
+                            loadImageFromPath(imageView, imagePath)
+                        } else {
+                            Toast.makeText(requireContext(), "Image Error", Toast.LENGTH_SHORT).show()
+                        }
                     }
                     result.onFailure { exception ->
                         Log.e("Error", "API request failed", exception)
@@ -79,6 +88,27 @@ class HomeFragment : Fragment() {
             }
 
         return root
+    }
+
+    private fun getWiseBrushImagePath(context: Context, fileName: String): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val selection = "${MediaStore.Images.Media.RELATIVE_PATH} LIKE ? AND ${MediaStore.Images.Media.DISPLAY_NAME} = ?"
+        val selectionArgs = arrayOf("%Pictures%", fileName)
+        val cursor: Cursor? = context.contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )
+
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                return it.getString(columnIndex)
+            }
+        }
+        return null
     }
 
     private fun showInputDialog() {
@@ -96,6 +126,11 @@ class HomeFragment : Fragment() {
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         pickImage.launch(intent)
+    }
+
+    fun loadImageFromPath(imageView: ImageView, imagePath: String) {
+        val bitmap = BitmapFactory.decodeFile(imagePath)
+        imageView.setImageBitmap(bitmap)
     }
 
     private fun loadImageFromUri(imageUri: Uri) {
@@ -123,7 +158,7 @@ class HomeFragment : Fragment() {
                     true
                 )
                 withContext(Dispatchers.Main) {
-                    binding.imageView.setImageBitmap(scaledBitmap)
+                    binding.imageView1.setImageBitmap(scaledBitmap)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
