@@ -47,10 +47,10 @@ class NotificationsViewModel : ViewModel() {
 
             result.onSuccess { data ->
                 val user = User(
-                    id = data["id"] as Int,
-                    name = data["name"] as String,
-                    password = data["password"] as String,
-                    email = data["email"] as String
+                    id = data["id"] as? Int ?: -1,
+                    name = data["name"] as? String ?: "Unknown User",
+                    password = data["password"] as? String ?: "",
+                    email = data["email"] as? String ?: ""
                 )
                 _userProfile.value = user
             }.onFailure {
@@ -66,7 +66,7 @@ class NotificationsViewModel : ViewModel() {
 
     fun updateUserProfile(username: String, newUsername: String, newPassword: String, newEmail: String) {
         viewModelScope.launch {
-            UserRepository.updateProfile(username, newUsername, newEmail)
+            UserRepository.updateProfile(username, newUsername,newPassword, newEmail)
         }
     }
 }
