@@ -31,6 +31,7 @@ import com.example.bottomnavigation1.model.GenerateRequest
 import com.example.bottomnavigation1.repository.ImageRepository
 import com.example.bottomnavigation1.ui.home.InputDialogHomeFragment
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 
 class DashboardFragment : Fragment() {
@@ -138,7 +139,7 @@ class DashboardFragment : Fragment() {
                     // 文件保存成功，显示图像文件
                     var imageFilePath = file.absolutePath
                     loadImageFromUri(imageFilePath.toUri())
-//                        openGallery()
+                    openGallery()
                 }
                 result.onFailure { exception ->
                     Log.e("Error", "API request failed", exception)

@@ -29,7 +29,7 @@ object ImageRepository {
         context: Context,
         bitmap: Bitmap,
         generateRequest: GenerateRequest,
-        callback: (Result<File>) -> Unit
+        callback: (Result<String>) -> Unit
     ) {
         // 将 Bitmap 转换为 byteArray
         val imageByteArray = bitmapToByteArray.getBitmapAsByteArray(bitmap)
@@ -67,12 +67,8 @@ object ImageRepository {
                         // 获取图像字节流
                         val inputStream = responseBody.byteStream()
                         try {
-                            val fileUri = saveImageToGallery(context, inputStream, generateRequest.positivePrompt)
-                            if (fileUri != null) {
-                                callback(Result.success(File(fileUri.path))) // 返回文件 URI
-                            } else {
-                                callback(Result.failure(Exception("Failed to save image to gallery")))
-                            }
+                            val fileUri = saveImageToGallery(context, inputStream, generateRequest.positivePrompt + System.currentTimeMillis())
+                            callback(Result.success(fileUri))
                         } catch (e: IOException) {
                             callback(Result.failure(e)) // 如果保存失败，返回失败结果
                         }
@@ -93,7 +89,7 @@ object ImageRepository {
         })
     }
 
-    fun textToImg(context: Context, request: GenerateRequest, callback: (Result<File>) -> Unit) {
+    fun textToImg(context: Context, request: GenerateRequest, callback: (Result<String>) -> Unit) {
         RetrofitInstance.apiService.generateImage(request).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
@@ -101,9 +97,9 @@ object ImageRepository {
                         // 获取图像字节流
                         val inputStream = responseBody.byteStream()
                         try {
-                            val fileUri = saveImageToGallery(context, inputStream, request.positivePrompt)
+                            val fileUri = saveImageToGallery(context, inputStream, request.positivePrompt + System.currentTimeMillis())
                             if (fileUri != null) {
-                                callback(Result.success(File(fileUri.path))) // 返回文件 URI
+                                callback(Result.success(fileUri)) // 返回文件 URI
                             } else {
                                 callback(Result.failure(Exception("Failed to save image to gallery")))
                             }
@@ -128,13 +124,13 @@ object ImageRepository {
     }
 
     // 保存图像到图库特定文件夹
-    private fun saveImageToGallery(context: Context, inputStream: InputStream, imageName: String): Uri? {
+    private fun saveImageToGallery(context: Context, inputStream: InputStream, imageName: String): String {
         val contentResolver = context.contentResolver
 
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "$imageName.png")  // 图片名
             put(MediaStore.Images.Media.MIME_TYPE, "image/png")          // 图片格式
-            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/YourAppFolder") // 图片文件夹路径（你的应用文件夹）
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/draw") // 图片文件夹路径（你的应用文件夹）
             put(MediaStore.Images.Media.IS_PENDING, 1)                    // 文件处于待处理状态
         }
 
@@ -157,7 +153,7 @@ object ImageRepository {
             }
         }
 
-        return imageUri  // 返回保存后的 Uri
+        return imageName  // 返回保存后的 Uri
     }
 
     // 保存图像到本地文件
