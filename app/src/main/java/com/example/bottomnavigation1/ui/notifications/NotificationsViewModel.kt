@@ -55,7 +55,7 @@ class NotificationsViewModel : ViewModel() {
                         println("ID: ${data["id"]}, Name: ${data["name"]}, Password: ${data["password"]}, Email: ${data["email"]}")
 
                         val id = (data["id"] as? Int) ?: -1
-                        val name = (data["name"] as? String) ?: "Unknown"
+                        val name = (data["name"] as? String) ?: ""
                         val password = (data["password"] as? String) ?: ""
                         val email = (data["email"] as? String) ?: ""
 
