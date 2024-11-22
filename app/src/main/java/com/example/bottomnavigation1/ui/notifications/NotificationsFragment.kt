@@ -47,7 +47,7 @@ class NotificationsFragment : Fragment() {
         }
 
         viewModel.loginResult.observe(viewLifecycleOwner, Observer { result ->
-            if (result != null) {
+            if (result =="登录成功") {
                 val username = binding.username.text.toString()
                 if (username.isNotEmpty()) {
                     val intent = Intent(requireContext(), UserHomeActivity::class.java)
