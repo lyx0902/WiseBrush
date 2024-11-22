@@ -13,6 +13,24 @@
         android:textSize="20sp"
         android:visibility="visible"/>
 
+    <Spinner
+        android:id="@+id/updateOptionsSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/update_options"/>
+
+    <EditText
+        android:id="@+id/updateValueEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter new value"/>
+
+    <Button
+        android:id="@+id/updateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update"/>
+
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
