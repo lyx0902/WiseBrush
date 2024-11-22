@@ -3,11 +3,16 @@ package com.example.bottomnavigation1.repository
 
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import com.example.bottomnavigation1.api.RetrofitInstance
 import com.example.bottomnavigation1.model.GenerateRequest
+import com.example.bottomnavigation1.utils.bitmapToByteArray
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -20,9 +25,75 @@ import java.io.InputStream
 
 // to do
 object ImageRepository {
+    fun imgToImg(
+        context: Context,
+        bitmap: Bitmap,
+        generateRequest: GenerateRequest,
+        callback: (Result<File>) -> Unit
+    ) {
+        // 将 Bitmap 转换为 byteArray
+        val imageByteArray = bitmapToByteArray.getBitmapAsByteArray(bitmap)
 
+        // 创建 MultipartBody.Part
+        val imagePart = MultipartBody.Part.createFormData(
+            "image",
+            "image.png",  // 文件名
+            imageByteArray.toRequestBody("image/png".toMediaTypeOrNull(), 0 )
+        )
 
-    fun generateImageAndSave(context: Context, request: GenerateRequest, callback: (Result<File>) -> Unit) {
+        // 创建其他字段
+        val positivePrompt =
+            generateRequest.positivePrompt.toRequestBody("text/plain".toMediaTypeOrNull())
+        val negativePrompt =
+            generateRequest.negativePrompt.toRequestBody("text/plain".toMediaTypeOrNull())
+        val guidanceScale =
+            generateRequest.guidanceScale.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val numInferenceSteps = generateRequest.numInferenceSteps.toString()
+            .toRequestBody("text/plain".toMediaTypeOrNull())
+        val seed = generateRequest.seed?.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        // 发送网络请求
+        RetrofitInstance.apiService.imgToImg(
+            imagePart,
+            positivePrompt,
+            negativePrompt,
+            guidanceScale,
+            numInferenceSteps,
+            seed
+        ).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    response.body()?.let { responseBody ->
+                        // 获取图像字节流
+                        val inputStream = responseBody.byteStream()
+                        try {
+                            val fileUri = saveImageToGallery(context, inputStream, generateRequest.positivePrompt)
+                            if (fileUri != null) {
+                                callback(Result.success(File(fileUri.path))) // 返回文件 URI
+                            } else {
+                                callback(Result.failure(Exception("Failed to save image to gallery")))
+                            }
+                        } catch (e: IOException) {
+                            callback(Result.failure(e)) // 如果保存失败，返回失败结果
+                        }
+                    } ?: run {
+                        callback(Result.failure(Exception("Response body is null")))
+                    }
+                } else {
+                    callback(Result.failure(Exception("Error: ${response.code()}"))) // 错误处理
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                callback(Result.failure(t)) // 返回请求失败的异常
+                // 打印请求 URL 和头部信息
+                Log.e("Request", "Request URL: ${call.request().url}")
+                Log.e("Request", "Request Headers: ${call.request().headers}")
+            }
+        })
+    }
+
+    fun textToImg(context: Context, request: GenerateRequest, callback: (Result<File>) -> Unit) {
         RetrofitInstance.apiService.generateImage(request).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
@@ -30,8 +101,6 @@ object ImageRepository {
                         // 获取图像字节流
                         val inputStream = responseBody.byteStream()
                         try {
-                            // 保存图像到图库指定文件夹
-                            // to do此处应该改为用户（如有
                             val fileUri = saveImageToGallery(context, inputStream, request.positivePrompt)
                             if (fileUri != null) {
                                 callback(Result.success(File(fileUri.path))) // 返回文件 URI
