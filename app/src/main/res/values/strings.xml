@@ -3,6 +3,7 @@
     <string name="title_home">文生图</string>
     <string name="title_dashboard">图生图</string>
     <string name="title_notifications">个人主页</string>
+    <string name="title_person">用户信息管理</string>
     <string-array name="update_options">
         <item>Update Username</item>
         <item>Update Password</item>

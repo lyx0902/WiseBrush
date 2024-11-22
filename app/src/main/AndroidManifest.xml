@@ -19,7 +19,8 @@
         tools:targetApi="31">
         <activity
             android:name=".ui.notifications.UserHomeActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/title_person">
         </activity>
         <activity
             android:name=".MainActivity"
