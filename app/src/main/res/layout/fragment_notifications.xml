@@ -103,7 +103,7 @@
         android:id="@+id/newUserInterfaceStub"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout="@layout/layout_new_user_interface"
+        android:layout="@layout/fragment_dashboard"
         android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
