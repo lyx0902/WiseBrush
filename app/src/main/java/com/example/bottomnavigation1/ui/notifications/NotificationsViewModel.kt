@@ -43,30 +43,58 @@ class NotificationsViewModel : ViewModel() {
 
     fun getUserProfile(username: String) {
         viewModelScope.launch {
-            val result = UserRepository.getUserByName(username)
+            try {
+                // 获取结果
+                val result = UserRepository.getUserByName(username)
 
-            result.onSuccess { data ->
-                val user = User(
-                    id = data["id"] as? Int ?: -1,
-                    name = data["name"] as? String ?: "Unknown User",
-                    password = data["password"] as? String ?: "",
-                    email = data["email"] as? String ?: ""
-                )
-                _userProfile.value = user
-            }.onFailure {
+                result.onSuccess { data ->
+                    // 确保 data 是非空的 Map 类型
+                    if (data is Map<*, *>) {
+                        // 从 data 中获取用户信息
+                        println("Data: $data")
+                        println("ID: ${data["id"]}, Name: ${data["name"]}, Password: ${data["password"]}, Email: ${data["email"]}")
+
+                        val id = (data["id"] as? Int) ?: -1
+                        val name = (data["name"] as? String) ?: ""
+                        val password = (data["password"] as? String) ?: ""
+                        val email = (data["email"] as? String) ?: ""
+
+                        // 创建 User 实例并更新 LiveData
+                        _userProfile.value = User(id, name, password, email)
+                    } else {
+                        // data 类型不匹配，设置默认用户
+                        _userProfile.value = User(
+                            id = -1,
+                            name = "Invalid Data",
+                            password = "",
+                            email = ""
+                        )
+                    }
+                }.onFailure {
+                    // 请求失败时设置默认用户
+                    _userProfile.value = User(
+                        id = -1,
+                        name = "Unknown User",
+                        password = "",
+                        email = ""
+                    )
+                }
+            } catch (e: Exception) {
+                // 捕获异常，避免闪退
                 _userProfile.value = User(
                     id = -1,
-                    name = "Unknown User",
+                    name = "Error Occurred",
                     password = "",
                     email = ""
                 )
+                e.printStackTrace() // 打印异常日志便于调试
             }
         }
     }
-
+//
     fun updateUserProfile(username: String, newUsername: String, newPassword: String, newEmail: String) {
         viewModelScope.launch {
-            UserRepository.updateProfile(username, newUsername,newPassword, newEmail)
+            UserRepository.updateProfile(username, newUsername, newPassword,newEmail)
         }
     }
 }
