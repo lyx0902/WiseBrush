@@ -54,9 +54,9 @@ class InputDialogHomeFragment : DialogFragment() {
 
 
         // Load previously saved text or set default value
-        val savedText1 = sharedPreferences.getString("savedText1", "Please input")
-        val savedText2 = sharedPreferences.getString("savedText2", "Please input")
-        val savedText3 = sharedPreferences.getString("savedText3", "Please input")
+        val savedText1 = sharedPreferences.getString("savedText1", "")
+        val savedText2 = sharedPreferences.getString("savedText2", "")
+        val savedText3 = sharedPreferences.getString("savedText3", "")
         textView1.text = "相关性"
         textView2.text = "步数"
         textView3.text = "可选的种子(默认为null)"
