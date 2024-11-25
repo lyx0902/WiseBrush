@@ -62,9 +62,9 @@ class HomeFragment : Fragment() {
             var generateRequest = GenerateRequest(
                 requireView().findViewById<EditText>(R.id.editText1).text.toString(),
                 requireView().findViewById<EditText>(R.id.editText2).text.toString(),
-//                sharedPreferences.getString("savedText1", "7.5").toString().toDouble(),
-//                sharedPreferences.getString("savedText2", "50").toString().toInt(),
-//                sharedPreferences.getString("savedText3", "512").toString().toInt(),
+                sharedPreferences.getString("savedText1", "7.5").toString().toDouble(),
+                sharedPreferences.getString("savedText2", "50").toString().toInt(),
+                sharedPreferences.getString("savedText3", "512").toString().toInt(),
             )
 
             imageRepository.textToImg(requireContext(), generateRequest ){ result ->
