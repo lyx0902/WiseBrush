@@ -98,11 +98,7 @@ object ImageRepository {
                         val inputStream = responseBody.byteStream()
                         try {
                             val fileUri = saveImageToGallery(context, inputStream, request.positivePrompt + System.currentTimeMillis())
-                            if (fileUri != null) {
-                                callback(Result.success(fileUri)) // 返回文件 URI
-                            } else {
-                                callback(Result.failure(Exception("Failed to save image to gallery")))
-                            }
+                            callback(Result.success(fileUri))
                         } catch (e: IOException) {
                             callback(Result.failure(e)) // 如果保存失败，返回失败结果
                         }
@@ -128,10 +124,10 @@ object ImageRepository {
         val contentResolver = context.contentResolver
 
         val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "$imageName.png")  // 图片名
-            put(MediaStore.Images.Media.MIME_TYPE, "image/png")          // 图片格式
-            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/draw") // 图片文件夹路径（你的应用文件夹）
-            put(MediaStore.Images.Media.IS_PENDING, 1)                    // 文件处于待处理状态
+            put(MediaStore.Images.Media.DISPLAY_NAME, "$imageName.png")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/draw")
+            put(MediaStore.Images.Media.IS_PENDING, 1)
         }
 
         // 插入文件到 MediaStore
