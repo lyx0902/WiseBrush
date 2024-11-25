@@ -7,6 +7,7 @@ import com.example.bottomnavigation1.model.RegisterRequest
 import com.example.bottomnavigation1.model.UpdateProfileRequest
 import com.example.bottomnavigation1.model.User
 import com.example.bottomnavigation1.utils.encryptPsw.encryptPassword
+import org.json.JSONObject
 
 import java.sql.SQLException
 
@@ -34,7 +35,12 @@ object UserRepository {
                 val message = response.body()?.get("message") ?: "登录成功"
                 Result.success(message)
             } else {
-                Result.failure(Exception("登录失败: ${response.body()?.get("message") ?: "未知错误"}"))
+                val errorBody = response.errorBody()?.string()
+                val message = errorBody?.let {
+                    // 假设错误主体是一个包含 "message" 字段的 JSON 对象
+                    JSONObject(it).optString("message", "登录失败: 未知错误")
+                }?: "登录失败: 未知错误"
+                Result.failure(Exception(message))
             }
         } catch (e: Exception) {
             Result.failure(Exception("登录失败: ${e.message}"))
