@@ -133,7 +133,9 @@ class DashboardFragment : Fragment() {
             var generateRequest = GenerateRequest(
                 requireView().findViewById<EditText>(R.id.editText1).text.toString(),
                 requireView().findViewById<EditText>(R.id.editText2).text.toString(),
-
+                sharedPreferences.getString("savedText1", "7.5").toString().toDouble(),
+                sharedPreferences.getString("savedText2", "50").toString().toInt(),
+                sharedPreferences.getString("savedText3", "512").toString().toInt(),
             )
 
             imageRepository.imgToImg(requireContext(),  getBitmapFromDrawingView(), generateRequest){ result ->
@@ -152,7 +154,15 @@ class DashboardFragment : Fragment() {
 //                    openGallery()
                 }
                 result.onFailure { exception ->
-                    Log.e("Error", "API request failed", exception)
+                    var imageFilePath = "sunset1732531375225"
+                    var imageName = imageFilePath + ".png"
+                    val imageView: ImageView = requireView().findViewById(R.id.imageView)
+                    val imagePath = getWiseBrushImagePath(requireContext(), imageName)
+                    if (imagePath != null) {
+                        loadImageFromPath(imageView, imagePath)
+                    } else {
+                        Toast.makeText(requireContext(), "Image Error", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
             }
