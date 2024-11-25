@@ -19,6 +19,11 @@ class NotificationsViewModel : ViewModel() {
     private val _userProfile = MutableLiveData<User>()
     val userProfile: LiveData<User> get() = _userProfile
 
+    fun clearMessages() {
+        _loginResult.value = ""
+        _registerResult.value = ""
+    }
+
     fun login(username: String, password: String) {
         viewModelScope.launch {
             val result = UserRepository.loginUser(username, password)
