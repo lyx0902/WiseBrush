@@ -53,6 +53,11 @@ class NotificationsFragment : Fragment() {
             if (!result.isNullOrEmpty()) {
                 currentToast = Toast.makeText(context, result, Toast.LENGTH_SHORT)
                 currentToast?.show()
+                if (result == "登录成功") {
+                    val intent = Intent(activity, UserHomeActivity::class.java)
+                    intent.putExtra("username", binding.username.text.toString())
+                    startActivity(intent)
+                }
             }
         })
 
